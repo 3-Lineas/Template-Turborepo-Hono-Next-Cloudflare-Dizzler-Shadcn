@@ -1,7 +1,7 @@
 import * as schema from "@repo/db/schema";
 import { eq } from "drizzle-orm";
 import { DrizzleD1Database } from "drizzle-orm/d1";
-import { signJWT, verifyPassword } from "../../lib/crypto";
+import { signJWT, verifyPassword } from "@/lib/crypto";
 
 /**
  * Login user and generate JWT token

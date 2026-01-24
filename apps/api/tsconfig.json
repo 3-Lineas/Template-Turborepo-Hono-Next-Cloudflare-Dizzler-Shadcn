@@ -5,6 +5,10 @@
     "moduleResolution": "Bundler",
     "types": ["@cloudflare/workers-types", "node"],
     "declaration": false,
-    "declarationMap": false
+    "declarationMap": false,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   }
 }

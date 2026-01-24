@@ -2,6 +2,14 @@
 
 Este proyecto es un monorepo Turborepo que integra Next.js (Frontend) y Hono (Backend) sobre Cloudflare Workers/Pages, utilizando D1 como base de datos y Drizzle ORM.
 
+## Instalación rápida 🚀
+
+Puedes iniciar un nuevo proyecto utilizando nuestro CLI interactivo:
+
+```bash
+npx @3lineas/create-cf-stack@latest
+```
+
 ## Comandos Principales (Raíz)
 
 Estos comandos se ejecutan desde la raíz del proyecto y orquestan tareas en todo el monorepo.
@@ -86,3 +94,7 @@ El componente se agregará en `packages/ui/src/components` y estará disponible 
 3.  **Despliegue**:
     - Ejecuta `pnpm migrate:remote` para actualizar la BD de producción.
     - Ejecuta `pnpm build` y luego los comandos de deploy específicos si no tienes CI/CD configurado.
+
+## Créditos 👨‍💻
+
+Desarrollado por **Diego Nelson** para [3 Lineas](https://3lineas.com).

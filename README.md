@@ -1,135 +1,88 @@
-# Turborepo starter
+# CF Turborepo Next Hono
 
-This Turborepo starter is maintained by the Turborepo core team.
+Este proyecto es un monorepo Turborepo que integra Next.js (Frontend) y Hono (Backend) sobre Cloudflare Workers/Pages, utilizando D1 como base de datos y Drizzle ORM.
 
-## Using this example
+## Comandos Principales (Raíz)
 
-Run the following command:
+Estos comandos se ejecutan desde la raíz del proyecto y orquestan tareas en todo el monorepo.
 
-```sh
-npx create-turbo@latest
+| Comando            | Descripción                                                                    |
+| :----------------- | :----------------------------------------------------------------------------- |
+| `pnpm dev`         | Inicia el entorno de desarrollo local para todas las aplicaciones (Web + API). |
+| `pnpm build`       | Construye todas las aplicaciones y paquetes para producción.                   |
+| `pnpm lint`        | Ejecuta el linter en todos los paquetes.                                       |
+| `pnpm format`      | Formatea el código de todo el proyecto usando Prettier.                        |
+| `pnpm check-types` | Verifica los tipos de TypeScript en todo el proyecto.                          |
+
+## Gestión de Base de Datos (D1 + Drizzle)
+
+Comandos para gestionar la base de datos Cloudflare D1.
+
+| Comando               | Descripción                                                                                      |
+| :-------------------- | :----------------------------------------------------------------------------------------------- |
+| `pnpm db:generate`    | Genera los archivos de migración SQL basados en los cambios del esquema Drizzle (`packages/db`). |
+| `pnpm migrate:local`  | Aplica las migraciones pendientes a la base de datos D1 **local**.                               |
+| `pnpm migrate:remote` | Aplica las migraciones pendientes a la base de datos D1 **remota (producción)**.                 |
+| `pnpm db:studio`      | Abre Drizzle Studio para visualizar y editar la base de datos localmente.                        |
+
+## Comandos Específicos por Aplicación
+
+Aunque se recomienda usar los comandos raíz, aquí están los comandos específicos disponibles en cada paquete.
+
+### Frontend (`apps/web`)
+
+Desarrollado con Next.js 16 y desplegado en Cloudflare Workers via OpenNext.
+
+- `pnpm --filter web dev`: Inicia solo el frontend en modo desarrollo.
+- `pnpm --filter web build`: Construye la aplicación Next.js.
+- `pnpm --filter web deploy`: Despliega la aplicación a Cloudflare Workers.
+- `pnpm --filter web preview`: Genera una vista previa del despliegue.
+- `pnpm --filter web cf-typegen`: Genera los tipos para las variables de entorno de Cloudflare.
+
+### Backend (`apps/api`)
+
+API REST/tRPC desarrollada con Hono y desplegada en Cloudflare Workers.
+
+- `pnpm --filter @repo/api dev`: Inicia solo la API en modo desarrollo con Wrangler.
+- `pnpm --filter @repo/api deploy`: Despliega la API a Cloudflare Workers.
+
+### Base de Datos (`packages/db`)
+
+Paquete compartido de configuración de base de datos y esquemas.
+
+- `pnpm --filter @repo/db generate`: Alias interno para generar migraciones.
+- `pnpm --filter @repo/db studio`: Alias interno para abrir Drizzle Studio.
+
+## Estructura del Proyecto
+
+- **apps/web**: Aplicación Next.js (App Router, Tailwind CSS, Shadcn UI).
+- **apps/api**: API Server (Hono, tRPC router).
+- **packages/db**: Esquemas de base de datos Drizzle y configuración.
+- **packages/typescript-config**: Configuraciones de TypeScript compartidas.
+
+## Gestión de Componentes UI (shadcn/ui)
+
+Los componentes de UI se encuentran centralizados en el paquete `packages/ui`. Para agregar un nuevo componente desde la raíz del proyecto:
+
+```bash
+pnpm ui:add [nombre-del-componente]
 ```
 
-## What's inside?
+Ejemplo:
 
-This Turborepo includes the following packages/apps:
-
-### Apps and Packages
-
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
-
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
+```bash
+pnpm ui:add button
 ```
 
-You can build a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+El componente se agregará en `packages/ui/src/components` y estará disponible para usar en `apps/web` importándolo desde `@repo/ui/components/[nombre]`.
 
-```
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
+## Flujo de Trabajo Recomendado
 
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
-
-### Develop
-
-To develop all apps and packages, run the following command:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
-
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
-```
-
-You can develop a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
-
-```
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
-
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
-
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
-
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
-
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.dev/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.dev/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.dev/docs/reference/configuration)
-- [CLI Usage](https://turborepo.dev/docs/reference/command-line-reference)
+1.  **Desarrollo**: Ejecuta `pnpm dev` para levantar todo el entorno.
+2.  **Cambios en DB**:
+    - Modifica el esquema en `packages/db/src/schema.ts`.
+    - Ejecuta `pnpm db:generate` para crear la migración.
+    - Ejecuta `pnpm migrate:local` para aplicar cambios localmente.
+3.  **Despliegue**:
+    - Ejecuta `pnpm migrate:remote` para actualizar la BD de producción.
+    - Ejecuta `pnpm build` y luego los comandos de deploy específicos si no tienes CI/CD configurado.

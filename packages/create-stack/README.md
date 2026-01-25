@@ -14,12 +14,30 @@ Este paquete es parte del monorepo y permite descargar y configurar automáticam
 
 ## Uso 💻
 
-### Desde el registro (Próximamente)
+### Desde el registro
 
 ```bash
 pnpm create @3lineas/cf-stack
 # o
 npx @3lineas/create-cf-stack
+```
+
+### Agregar una nueva aplicación web
+
+Si ya estás dentro de un monorepo creado con este stack y quieres agregar una nueva aplicación Next.js (basada en la plantilla `apps/web`):
+
+```bash
+create-cf-stack add [nombre-de-la-app]
+```
+
+Esto descargará una copia fresca de `apps/web` desde el repositorio remoto y la configurará en `apps/[nombre-de-la-app]`.
+
+### Ayuda
+
+Para ver los comandos disponibles:
+
+```bash
+create-cf-stack help
 ```
 
 ## Estructura del Proyecto Generado

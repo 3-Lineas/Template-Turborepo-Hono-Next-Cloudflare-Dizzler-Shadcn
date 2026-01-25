@@ -1,6 +1,6 @@
 {
   "name": "@3lineas/create-cf-stack",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "CLI para crear un nuevo stack Cloudflare + Next.js + Hono",
   "author": "Diego Nelson (3 Lineas)",
   "type": "module",

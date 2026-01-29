@@ -13,7 +13,7 @@ export const trpc = createTRPCProxyClient<AppRouter>({
       fetch: async (input, init) => {
         // En OpenNext, getCloudflareContext puede ser async o sync dependiendo de la versión/uso.
         // Asumimos async por seguridad y consistencia con storage.ts
-        const { env } = await getCloudflareContext();
+        const { env } = await getCloudflareContext({ async: true });
         // In this project, the binding is named "API" in wrangler.jsonc
         const bindings = env as {
           API?: {

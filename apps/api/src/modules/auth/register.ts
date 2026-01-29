@@ -1,6 +1,6 @@
-import { publicProcedure } from "@/trpc";
+import { publicProcedure } from "../../trpc";
 import { z } from "zod";
-import { registerUserAction } from "@/actions/auth/registerUser.action";
+import { registerUserAction } from "../../actions/auth/registerUser.action";
 
 export const register = publicProcedure
   .input(

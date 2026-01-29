@@ -1,5 +1,4 @@
 import { Brand } from "@/components/brand";
-import Link from "next/link";
 import { ThemeToggle } from "@/components/theme-toogle";
 import { LogoutButton } from "./components/logout-button";
 

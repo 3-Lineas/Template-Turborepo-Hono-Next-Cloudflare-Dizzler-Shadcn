@@ -1,7 +1,6 @@
 "use client";
 
 import { Controller } from "react-hook-form";
-import { Loader2 } from "lucide-react";
 
 import { Button } from "@repo/ui/components/button";
 import { Input } from "@repo/ui/components/input";

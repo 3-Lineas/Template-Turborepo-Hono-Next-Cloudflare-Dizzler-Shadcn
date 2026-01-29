@@ -4,7 +4,7 @@ import { COOKIE_SESSION } from "./constants/cookies";
 const AUTH_ROUTES = ["/login", "/register", "/reset-password", "/verify-email"];
 const PUBLIC_ROUTES = ["/", "/about", "/contact", "/privacy", "/terms", "/api"];
 
-export default async function proxy(request: NextRequest) {
+export default async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   const isAuthRoute = AUTH_ROUTES.includes(pathname);

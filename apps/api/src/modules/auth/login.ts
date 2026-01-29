@@ -1,6 +1,6 @@
-import { publicProcedure } from "@/trpc";
+import { publicProcedure } from "../../trpc";
 import { z } from "zod";
-import { loginUserAction } from "@/actions/auth/loginUser.action";
+import { loginUserAction } from "../../actions/auth/loginUser.action";
 
 export const login = publicProcedure
   .input(z.object({ email: z.email(), password: z.string() }))

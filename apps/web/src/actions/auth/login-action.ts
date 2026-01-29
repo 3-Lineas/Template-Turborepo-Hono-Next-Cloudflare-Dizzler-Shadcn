@@ -4,7 +4,7 @@ import { trpc } from "@/lib/trpc-server";
 import { createSession } from "@/lib/session";
 import { z } from "zod";
 
-const loginSchema = z.object({
+export const loginSchema = z.object({
   email: z.email(),
   password: z.string().min(6),
 });
@@ -25,11 +25,11 @@ export async function loginAction(data: z.infer<typeof loginSchema>) {
       };
     }
 
-    // @ts-ignore
+    // Expected error due to type mismatch in session creation
     await createSession(response.data.user.id);
 
     return { success: true, message: response.message };
-  } catch (error) {
+  } catch {
     return { success: false, message: "Invalid credentials or server error" };
   }
 }

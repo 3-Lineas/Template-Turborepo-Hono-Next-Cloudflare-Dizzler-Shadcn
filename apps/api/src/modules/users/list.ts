@@ -1,5 +1,5 @@
-import { publicProcedure } from "@/trpc";
-import { listUsersAction } from "@/actions/users/listUsers.action";
+import { publicProcedure } from "../../trpc";
+import { listUsersAction } from "../../actions/users/listUsers.action";
 
 export const list = publicProcedure.query(async ({ ctx }) => {
   try {

@@ -1,4 +1,4 @@
-import { router } from "@/trpc";
+import { router } from "../../trpc";
 import { login } from "./login";
 import { register } from "./register";
 

@@ -1,13 +1,22 @@
-import { trpc } from "@/lib/trpc-server";
-import { Card, CardHeader, CardTitle, CardContent } from "@repo/ui/components/card";
-import { logoutAction } from "@/actions/auth/logout-action";
-import { Button } from "@repo/ui/components/button";
+import { trpc, type RouterOutputs } from "@/lib/trpc-server";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+} from "@repo/ui/components/card";
 import { toArgTime } from "@/lib/timezone";
 
+type UserListOutput = RouterOutputs["users"]["list"];
+// Extraemos el tipo que tiene la propiedad 'data' (el caso de éxito)
+type SuccessOutput = Extract<UserListOutput, { data: unknown }>;
+type User = SuccessOutput["data"][number];
+
 export default async function DashboardPage() {
-  let users: any[] = [];
+  let users: User[] = [];
   try {
     const response = await trpc.users.list.query();
+    // Verificamos explícitamente 'data' para que TS discrimine la unión correctamente
     if (response.success && "data" in response) {
       users = response.data;
     }

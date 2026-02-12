@@ -1,13 +1,13 @@
 "use client";
 
 import { Controller } from "react-hook-form";
-
 import { Button } from "@repo/ui/components/button";
 import { Input } from "@repo/ui/components/input";
 import { Form } from "@repo/ui/components/form";
 import { Field, FieldLabel, FieldError } from "@repo/ui/components/field";
 import { useRegister } from "../hooks/use-register";
 import { Spinner } from "@repo/ui/components/spinner";
+import { Info } from "lucide-react";
 
 export function RegisterForm() {
   const { form, isSubmitting, onSubmit } = useRegister();
@@ -69,6 +69,15 @@ export function RegisterForm() {
                 disabled={isSubmitting}
                 aria-invalid={fieldState.invalid}
               />
+              <div className="mt-2 text-xs text-muted-foreground p-2 bg-muted/50 rounded-md flex gap-2 items-start">
+                <Info className="w-4 h-4 mt-0.5 shrink-0 text-primary" />
+                <ul className="list-disc pl-4 space-y-1">
+                  <li>Mínimo 6 caracteres</li>
+                  <li>Al menos 1 mayúscula (A-Z)</li>
+                  <li>Al menos 1 número (0-9)</li>
+                  <li>Al menos 1 carácter especial</li>
+                </ul>
+              </div>
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
           )}

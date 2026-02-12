@@ -3,11 +3,7 @@
 import { trpc } from "@/lib/trpc-server";
 import { createSession } from "@/lib/session";
 import { z } from "zod";
-
-export const loginSchema = z.object({
-  email: z.email(),
-  password: z.string().min(6),
-});
+import { loginSchema } from "@/app/(auth)/login/schemas/login-schema";
 
 /**
  * Action handles user login

@@ -19,12 +19,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" suppressHydrationWarning>
-      <body
-        className={cn(
-          inter.className,
-          "bg-muted/50 dark:bg-muted/20 text-foreground",
-        )}
-      >
+      <body className={cn(inter.className, "bg-muted/50 text-foreground")}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

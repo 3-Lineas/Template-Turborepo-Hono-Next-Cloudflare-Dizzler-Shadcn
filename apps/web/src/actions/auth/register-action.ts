@@ -2,7 +2,7 @@
 
 import { trpc } from "@/lib/trpc-server";
 import { z } from "zod";
-import { registerSchema } from "./register-schema";
+import { registerSchema } from "@/app/(auth)/register/schemas/register-schema";
 
 /**
  * Action handles user registration

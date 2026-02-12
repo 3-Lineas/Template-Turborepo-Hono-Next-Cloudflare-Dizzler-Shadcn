@@ -38,6 +38,7 @@
 ## Formularios y Componentes de Cliente
 
 - **Manejo en Cliente**: Los formularios deben ser componentes de cliente (`"use client"`).
+- **Schemas**: Los esquemas de validación (zod) deben estar en `schemas` dentro del directorio del dominio correspondiente (ej: `src/app/(auth)/login/schemas/login-schema.ts`).
 - **Lógica de Cliente**: Toda la lógica de los componentes client debe estar en un custom hook (alojado en el dominio de la página dentro de `/hooks`).
   - **Regla**: 1 solo hook por página que gobierne todos los componentes client de la página.
 - **Ubicación**: En carpeta `components` dentro del directorio del dominio correspondiente.

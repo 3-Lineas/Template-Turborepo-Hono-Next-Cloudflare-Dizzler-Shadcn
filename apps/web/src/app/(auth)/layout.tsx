@@ -14,9 +14,7 @@ export default function AuthLayout({
       <div className="mb-8">
         <Brand />
       </div>
-      <div className="w-full max-w-md space-y-4 rounded-lg bg-background p-8">
-        {children}
-      </div>
+      <div className="w-full max-w-md space-y-4 rounded-lg p-8">{children}</div>
     </div>
   );
 }

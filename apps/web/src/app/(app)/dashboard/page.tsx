@@ -1,4 +1,4 @@
-import { trpc, type RouterOutputs } from "@/lib/trpc-server";
+import { api } from "@/lib/api-client";
 import {
   Card,
   CardHeader,
@@ -7,22 +7,11 @@ import {
 } from "@repo/ui/components/card";
 import { toArgTime } from "@/lib/timezone";
 
-type UserListOutput = RouterOutputs["users"]["list"];
-// Extraemos el tipo que tiene la propiedad 'data' (el caso de éxito)
-type SuccessOutput = Extract<UserListOutput, { data: unknown }>;
-type User = SuccessOutput["data"][number];
-
 export default async function DashboardPage() {
-  let users: User[] = [];
-  try {
-    const response = await trpc.users.list.query();
-    // Verificamos explícitamente 'data' para que TS discrimine la unión correctamente
-    if (response.success && "data" in response) {
-      users = response.data;
-    }
-  } catch (e) {
-    console.error("Failed to fetch users", e);
-  }
+  const res = await api.users.list.$get();
+  const response = await res.json();
+
+  const users = response.success && "data" in response ? response.data : [];
 
   return (
     <div>

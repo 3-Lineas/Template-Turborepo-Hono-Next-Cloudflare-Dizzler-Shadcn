@@ -1,10 +1,8 @@
-import { router } from '../trpc';
-import { authRouter } from '../modules/auth/auth.router';
-import { usersRouter } from '../modules/users/users.router';
+import { Hono } from "hono";
+import { authRouter } from "../modules/auth/auth.router";
+import { usersRouter } from "../modules/users/users.router";
 
-export const appRouter = router({
-  auth: authRouter,
-  users: usersRouter,
-});
+const app = new Hono().route("/auth", authRouter).route("/users", usersRouter);
 
-export type AppRouter = typeof appRouter;
+export type AppType = typeof app;
+export default app;

@@ -1,4 +1,4 @@
-import * as schema from "@repo/db/schema";
+import * as schema from "../../db/schema";
 import { DrizzleD1Database } from "drizzle-orm/d1";
 
 /**

@@ -1,20 +1,15 @@
-import { FetchCreateContextFnOptions } from '@trpc/server/adapters/fetch';
-import { createDb } from '@repo/db';
+import { createDb } from "./db";
 
 export interface Env {
   DB: D1Database;
   JWT_SECRET?: string;
 }
 
-export function createContext(
-  opts: FetchCreateContextFnOptions,
-  env: Env
-) {
+export function createContext(env: Env) {
   const db = createDb(env.DB);
   return {
     db,
     env,
-    ...opts,
   };
 }
 

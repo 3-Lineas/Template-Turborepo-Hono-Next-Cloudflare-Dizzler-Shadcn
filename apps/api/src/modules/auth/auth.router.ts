@@ -1,8 +1,7 @@
-import { router } from "../../trpc";
-import { login } from "./login";
-import { register } from "./register";
+import { Hono } from "hono";
+import { registerRouter } from "./register";
+import { loginRouter } from "./login";
 
-export const authRouter = router({
-  login,
-  register,
-});
+export const authRouter = new Hono()
+  .route("/login", loginRouter)
+  .route("/register", registerRouter);

@@ -28,7 +28,7 @@ Comandos para gestionar la base de datos Cloudflare D1.
 
 | Comando               | Descripción                                                                                      |
 | :-------------------- | :----------------------------------------------------------------------------------------------- |
-| `pnpm db:generate`    | Genera los archivos de migración SQL basados en los cambios del esquema Drizzle (`packages/db`). |
+| `pnpm db:generate`    | Genera los archivos de migración SQL basados en los cambios del esquema Drizzle (`apps/api/src/db`). |
 | `pnpm migrate:local`  | Aplica las migraciones pendientes a la base de datos D1 **local**.                               |
 | `pnpm migrate:remote` | Aplica las migraciones pendientes a la base de datos D1 **remota (producción)**.                 |
 | `pnpm db:studio`      | Abre Drizzle Studio para visualizar y editar la base de datos localmente.                        |
@@ -49,24 +49,17 @@ Desarrollado con Next.js 16 y desplegado en Cloudflare Workers via OpenNext.
 
 ### Backend (`apps/api`)
 
-API REST/tRPC desarrollada con Hono y desplegada en Cloudflare Workers.
+API REST desarrollada con Hono y desplegada en Cloudflare Workers. Incluye la configuración y esquemas de la base de datos (Drizzle).
 
 - `pnpm --filter @repo/api dev`: Inicia solo la API en modo desarrollo con Wrangler.
 - `pnpm --filter @repo/api deploy`: Despliega la API a Cloudflare Workers.
 
-### Base de Datos (`packages/db`)
-
-Paquete compartido de configuración de base de datos y esquemas.
-
-- `pnpm --filter @repo/db generate`: Alias interno para generar migraciones.
-- `pnpm --filter @repo/db studio`: Alias interno para abrir Drizzle Studio.
-
 ## Estructura del Proyecto
 
-- **apps/web**: Aplicación Next.js (App Router, Tailwind CSS, Shadcn UI).
-- **apps/api**: API Server (Hono, tRPC router).
-- **packages/db**: Esquemas de base de datos Drizzle y configuración.
+- **apps/web**: Aplicación Next.js 16 (App Router, Tailwind CSS, Shadcn UI). Consume Hono RPC mediante Cloudflare Service Bindings.
+- **apps/api**: API Server (Hono) y Capa de Datos (Drizzle ORM).
 - **packages/typescript-config**: Configuraciones de TypeScript compartidas.
+- **packages/ui**: Componentes base de UI (Shadcn).
 
 ## Gestión de Componentes UI (shadcn/ui)
 
@@ -88,7 +81,7 @@ El componente se agregará en `packages/ui/src/components` y estará disponible 
 
 1.  **Desarrollo**: Ejecuta `pnpm dev` para levantar todo el entorno.
 2.  **Cambios en DB**:
-    - Modifica el esquema en `packages/db/src/schema.ts`.
+    - Modifica el esquema en `apps/api/src/db/schema.ts`.
     - Ejecuta `pnpm db:generate` para crear la migración.
     - Ejecuta `pnpm migrate:local` para aplicar cambios localmente.
 3.  **Despliegue**:

@@ -1,16 +1,14 @@
-import { createDb } from "./db";
+import { DrizzleD1Database } from "drizzle-orm/d1";
+import * as schema from "./db/schema";
+import { Logger } from "@repo/logger";
 
 export interface Env {
   DB: D1Database;
   JWT_SECRET?: string;
 }
 
-export function createContext(env: Env) {
-  const db = createDb(env.DB);
-  return {
-    db,
-    env,
-  };
+// Custom variables accessible via c.get("db") / c.get("logger")
+export interface CustomVars {
+  db: DrizzleD1Database<typeof schema>;
+  logger: Logger;
 }
-
-export type Context = Awaited<ReturnType<typeof createContext>>;

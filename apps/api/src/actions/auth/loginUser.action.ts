@@ -2,12 +2,15 @@ import * as schema from "../../db/schema";
 import { eq } from "drizzle-orm";
 import { DrizzleD1Database } from "drizzle-orm/d1";
 import { signJWT, verifyPassword } from "../../lib/crypto";
+import { AuthenticationError } from "../../errors";
 
 /**
  * Login user and generate JWT token
  * @param db Database instance
  * @param input Login credentials
+ * @param jwtSecret Secret for signing JWT
  * @returns User data and token
+ * @throws AuthenticationError if credentials are invalid
  */
 export const loginUserAction = async (
   db: DrizzleD1Database<typeof schema>,
@@ -22,14 +25,18 @@ export const loginUserAction = async (
     .get();
 
   if (!user) {
-    throw new Error("Credenciales inválidas");
+    throw new AuthenticationError(
+      "Lo sentimos, el correo o la contraseña son incorrectos. Por favor, verifica tus datos e inténtalo de nuevo.",
+    );
   }
 
   // Verify password
   const isValid = await verifyPassword(input.password, user.password);
 
   if (!isValid) {
-    throw new Error("Credenciales inválidas");
+    throw new AuthenticationError(
+      "Lo sentimos, el correo o la contraseña son incorrectos. Por favor, verifica tus datos e inténtalo de nuevo.",
+    );
   }
 
   // Generate token

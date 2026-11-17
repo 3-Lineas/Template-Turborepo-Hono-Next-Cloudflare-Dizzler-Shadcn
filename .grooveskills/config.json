@@ -1,0 +1,36 @@
+{
+  "version": "1.21.1",
+  "harness": true,
+  "language": "es",
+  "agents": [
+    "antigravity"
+  ],
+  "skills": [
+    "odd-ai",
+    "best-practices",
+    "world-class-engineering",
+    "ux-writing",
+    "docs-standards",
+    "security-audit",
+    "error-handling-logging",
+    "clean-architecture-ddd",
+    "external-service-adapters",
+    "storage-file-adapters",
+    "auth-rbac-policies",
+    "controller-orchestration-queues",
+    "webhook-idempotency",
+    "caching-rate-limiting",
+    "env-feature-flags",
+    "typescript-clean",
+    "valibot-validation",
+    "testing-vitest",
+    "hono",
+    "workers-rpc-precision",
+    "frontend-design",
+    "react-core",
+    "react-advanced",
+    "nextjs-architecture",
+    "groove-harness"
+  ],
+  "updatedAt": "2026-11-17T12:27:22.406Z"
+}

@@ -1,0 +1,11 @@
+# Architecture Decision Records (ADR)
+
+An append-only log of significant technical and architectural choices.
+
+| Date | Title | Decision | Reason & Consequences |
+| :--- | :--- | :--- | :--- |
+| 2026-11-17 | Adopt GrooveSkills Harness | Initialized `.grooveskills/` control plane with ODD | Clean, encapsulated agent memory, 3-lane ODD flow, and Español copy standard |
+| 2026-11-17 | Refactor Completo a Estándares GrooveSkills y Valibot | Migrar todo el código existente de Zod (`zod`, `@hono/zod-validator`) a Valibot (`valibot`, `@hono/valibot-validator`) y alinear el template completo a las skills instaladas | Garantiza 100% de consistencia con `valibot-validation`, `hono` y `env-feature-flags`, menor bundle size en Cloudflare Workers y tipado estricto de fronteras (`InferInput`/`InferOutput`). |
+| 2026-11-17 | Estructura Estricta de Capas Técnicas por Dominio en `apps/api` | Deprecar `src/modules/` y `src/routers/` en `apps/api` a favor de capas técnicas puras por dominio (`src/routes/{domain}/`, `src/actions/{domain}/`, `src/dtos/{domain}/`, `src/types/{domain}/`, `src/errors/{domain}/`), con 1 función/tipo por archivo, 1 llamada DB por Action y orquestación mediante `Pipeline` | Cumple estrictamente `clean-architecture-ddd`, `hono` y `controller-orchestration-queues`, eliminando barriles y acciones monolíticas. |
+| 2026-11-17 | Comunicación `apps/web` <-> `apps/api` vía Hono RPC y Service Binding | Mantener Hono RPC (`hc<AppType>`) sobre el Service Binding `API` de Cloudflare (`env.API.fetch`) mediante el flujo GroovePack (`apiToast -> Server Action -> apiAction -> apiClient`) | Preserva el tipado end-to-end entre el Worker Hono y Next.js (OpenNext Cloudflare) con latencia cero en la red interna de Cloudflare y manejo uniforme de errores/toasts. |
+| 2026-11-17 | Estrategia de Testing con Vitest y Scripts de Verificación en `@repo/api` | Documentar como brecha pendiente la incorporación de Vitest (con SQLite/D1 in-memory siguiendo `testing-vitest`) y los scripts `check-types`, `lint` y `test` en `apps/api/package.json` y `turbo.json` | Permite validar determinísticamente rutas Hono, pipelines y acciones atómicas sobre D1 sin mocks frágiles, asegurando verificación estática en todo el monorepo. |

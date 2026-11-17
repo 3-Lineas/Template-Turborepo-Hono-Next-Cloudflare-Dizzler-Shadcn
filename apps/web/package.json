@@ -13,12 +13,11 @@
     "cf-typegen": "wrangler types --env-interface CloudflareEnv ./cloudflare-env.d.ts"
   },
   "dependencies": {
+    "@3lineas/groovepack": "^1.1.0",
     "@hookform/resolvers": "^5.4.0",
     "@repo/api": "workspace:*",
-    "@repo/logger": "workspace:*",
     "@repo/ui": "workspace:*",
-    "drizzle-orm": "0.45.2",
-    "hono": "^4.12.26",
+    "hono": "^4.13.19",
     "jose": "^6.1.3",
     "lucide-react": "^0.475.0",
     "next": "16.2.9",

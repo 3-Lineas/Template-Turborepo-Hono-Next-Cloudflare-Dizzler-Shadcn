@@ -15,5 +15,9 @@
     "ui": "src/components",
     "lib": "src/lib",
     "hooks": "src/hooks"
-  }
+  },
+  "menuColor": "default",
+  "menuAccent": "subtle",
+  "rtl": false,
+  "iconLibrary": "hugeicons"
 }

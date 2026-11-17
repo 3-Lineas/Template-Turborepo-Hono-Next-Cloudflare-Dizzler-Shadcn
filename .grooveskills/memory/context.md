@@ -7,9 +7,9 @@ This file provides AI agents with instant architectural orientation for this pro
 - **Backend (`apps/api` — `@repo/api`)**:
   - Runtime: Cloudflare Workers (`wrangler ^4.103.0`).
   - Framework: Hono (`^4.12.26`).
-  - Database & ORM: Cloudflare D1 (`binding = "DB"`) + Drizzle ORM (`^0.45.2`) & Drizzle Kit (`^0.31.10`).
-  - Auth: `jose` (`^6.1.3`) for JWT session/token handling.
-  - Validation: Currently has `zod` (`^4.3.6`) & `@hono/zod-validator` installed; **agreed target standard is full refactor to Valibot (`valibot` + `@hono/valibot-validator`)** per GrooveSkills rules.
+  - Database: Cloudflare D1 nativo (`binding = "DB"`) vía `getD1()` (`import { env } from "cloudflare:workers"`) y migraciones SQL en `apps/api/migrations/` (sin Drizzle ORM).
+  - Auth: `jose` (`^6.1.3`) + Web Crypto PBKDF2 para hashing de contraseñas y JWT (requiere `JWT_SECRET` en `ctx.env` / `.dev.vars` sin fallback).
+  - Validation & Testing: Valibot (`valibot` + `@hono/valibot-validator`) y Vitest (`vitest` con adaptador D1 in-memory).
 - **Frontend (`apps/web` — `web`)**:
   - Framework: Next.js `16.2.9` (App Router, Turbopack) + React `19.2.7` (`babel-plugin-react-compiler`).
   - Cloudflare Adapter: `@opennextjs/cloudflare` (`^1.19.11`) with Service Binding `API` -> `api` worker and `WORKER_SELF_REFERENCE`.
@@ -17,7 +17,6 @@ This file provides AI agents with instant architectural orientation for this pro
   - Forms: `react-hook-form` (`^7.80.0`) + `@hookform/resolvers`.
 - **Shared Packages (`packages/`)**:
   - `@repo/ui`: Shared Shadcn/Radix UI component library (`./components/*`, `./lib/*`, `./hooks/*`, `./styles/*`).
-  - `@repo/logger`: Structured logger used across `apps/api` and `apps/web`.
   - `@repo/eslint-config`: Shared ESLint 9 configurations.
   - `@repo/typescript-config`: Shared `tsconfig` bases.
 
@@ -38,10 +37,9 @@ This file provides AI agents with instant architectural orientation for this pro
   - GroovePack communication pipeline: `apiToast -> Server Action -> apiAction -> apiClient` using Hono RPC (`hc<AppType>`) over Cloudflare Service Binding (`env.API.fetch`).
 
 ## 3. Source Modules & Data Flow
-- `apps/api`: Cloudflare Worker entry at `src/index.ts`. Injects Drizzle D1 (`ctx.set("db", db)`) and `@repo/logger` (`ctx.set("logger", logger)`) per request, handles `AppError` and validation errors globally, and mounts routes under `/api`.
+- `apps/api`: Cloudflare Worker entry at `src/index.ts`. Injects D1 (`ctx.set("db", getD1())`) per request, handles `AppError` and validation errors globally using `@3lineas/groovepack/logger`, orchestrates multi-step routes with `@3lineas/groovepack/pipeline`, and mounts routes under `/api`.
 - `apps/web`: Next.js App Router deployed to Cloudflare Workers via OpenNext (`wrangler.jsonc`). Communicates with `apps/api` via the `API` Service Binding (`apps/web/src/lib/api-client.ts`) wrapped by `apiAction` (`apps/web/src/actions/api-action.ts`).
 - `packages/ui`: Shared design system components consumed via `@repo/ui/components/*`.
-- `packages/logger`: Shared `Logger` class consumed via `@repo/logger`.
 
 ## 4. Communication & User Copy Language
 - **Configured Language**: Español (`es`).

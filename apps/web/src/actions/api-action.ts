@@ -1,4 +1,4 @@
-import { Logger } from "@repo/logger";
+import { Logger } from "@/lib/logger/index";
 
 /**
  * Standard interface for Server Action responses.

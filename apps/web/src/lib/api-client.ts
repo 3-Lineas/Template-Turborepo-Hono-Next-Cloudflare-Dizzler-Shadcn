@@ -1,5 +1,5 @@
 import { hc } from "hono/client";
-import type { AppType } from "@repo/api/src/routers";
+import type { AppType } from "@repo/api/src/routes/index";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { verifySession } from "@/lib/session";
 

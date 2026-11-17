@@ -6,7 +6,6 @@
     "types": ["@cloudflare/workers-types", "node"],
     "declaration": false,
     "declarationMap": false,
-    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     }

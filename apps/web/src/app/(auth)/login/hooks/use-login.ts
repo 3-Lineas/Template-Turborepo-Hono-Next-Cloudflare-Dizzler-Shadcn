@@ -1,50 +1,36 @@
 "use client";
 
+import { apiToast } from "@3lineas/groovepack/api-toast";
+import { valibotResolver } from "@hookform/resolvers/valibot";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { toast } from "sonner";
-import { loginAction } from "@/actions/auth/login-action";
-import { useState } from "react";
-
-const loginSchema = z.object({
-  email: z.email({ message: "Ingresa un correo válido para continuar." }),
-  password: z
-    .string()
-    .min(6, { message: "La contraseña debe tener al menos 6 caracteres." }),
-});
-
-export type LoginSchema = z.infer<typeof loginSchema>;
+import { loginAction } from "@/actions/auth/login.action";
+import { LoginSchema } from "@/app/(auth)/login/schemas/login.schema";
+import type { LoginInput } from "@/app/(auth)/login/types/login-input.type";
 
 export function useLogin() {
   const router = useRouter();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const form = useForm<LoginSchema>({
-    resolver: zodResolver(loginSchema),
+  const form = useForm<LoginInput>({
+    resolver: valibotResolver(LoginSchema),
     defaultValues: {
       email: "",
       password: "",
     },
   });
 
-  async function onSubmit(values: LoginSchema) {
-    setIsSubmitting(true);
-    const res = await loginAction(values);
-
-    if (res.success) {
-      toast.success(res.message);
-      router.push("/dashboard");
-    } else {
-      setIsSubmitting(false);
-      toast.error(res.message);
-    }
-  }
+  const onSubmit = async (values: LoginInput) => {
+    await apiToast({
+      action: () => loginAction(values),
+      onSuccess: () => {
+        router.push("/dashboard");
+        router.refresh();
+      },
+    });
+  };
 
   return {
     form,
-    isSubmitting,
-    onSubmit,
+    onSubmit: form.handleSubmit(onSubmit),
+    isSubmitting: form.formState.isSubmitting,
   };
 }

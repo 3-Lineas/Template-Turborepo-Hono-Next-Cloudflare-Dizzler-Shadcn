@@ -1,24 +1,12 @@
-import { Skeleton } from "@repo/ui/components/skeleton";
-import { Card, CardHeader, CardContent } from "@repo/ui/components/card";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function DashboardLoading() {
   return (
-    <div>
-      <div className="flex justify-between items-center mb-8">
-        <Skeleton className="h-10 w-48" />
-      </div>
-
+    <div className="container mx-auto space-y-6 p-6">
+      <h1 className="text-3xl font-bold">Dashboard</h1>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {Array.from({ length: 6 }).map((_, i) => (
-          <Card key={i}>
-            <CardHeader>
-              <Skeleton className="h-6 w-3/4" />
-            </CardHeader>
-            <CardContent>
-              <Skeleton className="h-4 w-1/2 mb-2" />
-              <Skeleton className="h-4 w-1/3" />
-            </CardContent>
-          </Card>
+        {[1, 2, 3].map((cardIndex) => (
+          <Skeleton key={cardIndex} className="h-32 w-full rounded-xl" />
         ))}
       </div>
     </div>

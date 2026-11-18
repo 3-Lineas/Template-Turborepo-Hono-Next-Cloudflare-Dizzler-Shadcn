@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { globalErrorHandler } from "./common/utils/global-error-handler";
+import { notFoundHandler } from "./common/utils/not-found-handler";
 import { getD1 } from "./lib/d1/get-d1";
 import { apiRouter } from "./routes/index";
 import type { CustomVars } from "./types/context/custom-vars.type";
@@ -19,6 +20,7 @@ app.use("*", async (ctx, next) => {
 });
 
 app.onError(globalErrorHandler);
+app.notFound(notFoundHandler);
 
 app.route("/api", apiRouter);
 

@@ -10,20 +10,18 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@repo/ui/components/alert-dialog";
-import { Button } from "@repo/ui/components/button";
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
 import { useLogout } from "../hooks/use-logout";
-import { Spinner } from "@repo/ui/components/spinner";
+import { Spinner } from "@/components/ui/spinner";
 
 export function LogoutButton() {
   const { open, setOpen, isPending, handleLogout } = useLogout();
 
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
-      <AlertDialogTrigger asChild>
-        <Button disabled={isPending} size="sm">
-          Cerrar Sesión
-        </Button>
+      <AlertDialogTrigger render={<Button disabled={isPending} size="sm" />}>
+        Cerrar Sesión
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>

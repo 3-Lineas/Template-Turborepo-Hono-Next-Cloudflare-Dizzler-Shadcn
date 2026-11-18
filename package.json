@@ -3,13 +3,17 @@
   "private": true,
   "scripts": {
     "build": "turbo run build",
-    "dev": "turbo run dev",
+    "dev": "turbo run dev:vinext",
+    "dev:vinext": "turbo run dev:vinext",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
     "migrate:local": "pnpm --filter @repo/api exec -- wrangler d1 migrations apply DB --local",
     "migrate:remote": "pnpm --filter @repo/api exec -- wrangler d1 migrations apply DB --remote",
-    "ui:add": "cd packages/ui && pnpm dlx shadcn@latest add"
+    "db:migrate": "pnpm --filter @repo/api db:migrate",
+    "db:migrate:fresh": "pnpm --filter @repo/api db:migrate:fresh",
+    "db:seed": "pnpm --filter @repo/api db:seed",
+    "ui:add": "cd apps/web && pnpm dlx shadcn@latest add"
   },
   "devDependencies": {
     "prettier": "^3.10.1",
@@ -21,5 +25,12 @@
     "node": ">=18"
   },
   "author": "Diego Nelson (3 Lineas)",
-  "version": "1.0.2"
+  "version": "1.0.2",
+  "pnpm": {
+    "peerDependencyRules": {
+      "allowedVersions": {
+        "typescript": "6"
+      }
+    }
+  }
 }

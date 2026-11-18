@@ -1,20 +1,19 @@
 "use client";
 
 import { Controller } from "react-hook-form";
-import { Button } from "@repo/ui/components/button";
-import { Input } from "@repo/ui/components/input";
-import { Form } from "@repo/ui/components/form";
-import { Field, FieldLabel, FieldError } from "@repo/ui/components/field";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Field, FieldLabel, FieldError } from "@/components/ui/field";
 import { useRegister } from "../hooks/use-register";
-import { Spinner } from "@repo/ui/components/spinner";
-import { Info } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { InformationCircleIcon } from "@hugeicons/core-free-icons";
 
 export function RegisterForm() {
   const { form, isSubmitting, onSubmit } = useRegister();
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+    <form onSubmit={onSubmit} className="grid gap-4">
         <Controller
           name="name"
           control={form.control}
@@ -70,7 +69,10 @@ export function RegisterForm() {
                 aria-invalid={fieldState.invalid}
               />
               <div className="mt-2 text-xs text-muted-foreground p-2 bg-muted/50 rounded-md flex gap-2 items-start">
-                <Info className="w-4 h-4 mt-0.5 shrink-0 text-primary" />
+                <HugeiconsIcon
+                  icon={InformationCircleIcon}
+                  className="w-4 h-4 mt-0.5 shrink-0 text-primary"
+                />
                 <ul className="list-disc pl-4 space-y-1">
                   <li>Mínimo 6 caracteres</li>
                   <li>Al menos 1 mayúscula (A-Z)</li>
@@ -88,6 +90,5 @@ export function RegisterForm() {
           Crear Cuenta
         </Button>
       </form>
-    </Form>
   );
 }

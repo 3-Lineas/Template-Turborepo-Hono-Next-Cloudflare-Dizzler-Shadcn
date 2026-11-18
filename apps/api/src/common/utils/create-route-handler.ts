@@ -20,13 +20,21 @@ export function createRouteHandler<
 
     const rawData = await handler({ db, ctx });
 
-    const data = options.outputSchema
-      ? (v.parse(options.outputSchema, rawData) as InferOutput<
-          NonNullable<TOutputSchema>
-        >)
-      : rawData;
+    type ResolvedData = TOutputSchema extends BaseSchema<
+      unknown,
+      unknown,
+      BaseIssue<unknown>
+    >
+      ? InferOutput<TOutputSchema>
+      : TResult;
 
-    const payload: ActionResponse<typeof data> = {
+    const data = (
+      options.outputSchema
+        ? v.parse(options.outputSchema, rawData)
+        : rawData
+    ) as ResolvedData;
+
+    const payload: ActionResponse<ResolvedData> = {
       success: true,
       data,
       ...(options.message ? { message: options.message } : {}),

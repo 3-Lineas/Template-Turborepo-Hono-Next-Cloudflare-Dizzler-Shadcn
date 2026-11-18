@@ -1,16 +1,19 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import { logoutAction } from "@/actions/auth/logout-action";
+import { useState } from "react";
+import { logoutAction } from "@/actions/auth/logout.action";
 
 export function useLogout() {
   const [open, setOpen] = useState(false);
-  const [isPending, startTransition] = useTransition();
+  const [isPending, setIsPending] = useState(false);
 
-  const handleLogout = () => {
-    startTransition(async () => {
+  const handleLogout = async () => {
+    setIsPending(true);
+    try {
       await logoutAction();
-    });
+    } finally {
+      setIsPending(false);
+    }
   };
 
   return {

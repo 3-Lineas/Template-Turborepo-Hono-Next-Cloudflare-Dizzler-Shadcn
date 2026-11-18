@@ -23,6 +23,8 @@ coverage
 
 # Build Outputs
 .next/
+.vinext/
+.wrangler/
 out/
 build
 dist

@@ -1,21 +1,19 @@
-import { api } from "@/lib/api-client";
+import { listUsersAction } from "@/actions/users/list-users.action";
 import {
   Card,
+  CardContent,
   CardHeader,
   CardTitle,
-  CardContent,
-} from "@repo/ui/components/card";
+} from "@/components/ui/card";
 import { toArgTime } from "@/lib/timezone";
 
 export default async function DashboardPage() {
-  const res = await api.users.list.$get();
-  const response = await res.json();
-
-  const users = response.success && "data" in response ? response.data : [];
+  const response = await listUsersAction();
+  const users = response.success && response.data ? response.data : [];
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-8">
+      <div className="mb-8 flex items-center justify-between">
         <h1 className="text-3xl font-bold">Dashboard</h1>
       </div>
 
@@ -28,7 +26,7 @@ export default async function DashboardPage() {
             <CardContent>
               <p className="text-sm text-muted-foreground">ID: {user.id}</p>
               <p className="text-sm text-muted-foreground">
-                Joined: {toArgTime(user.createdAt!, "Y-m-d")}
+                Joined: {toArgTime(user.createdAt, "Y-m-d")}
               </p>
             </CardContent>
           </Card>

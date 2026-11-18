@@ -2,19 +2,17 @@
 
 import { Controller } from "react-hook-form";
 
-import { Button } from "@repo/ui/components/button";
-import { Input } from "@repo/ui/components/input";
-import { Form } from "@repo/ui/components/form";
-import { Field, FieldLabel, FieldError } from "@repo/ui/components/field";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Field, FieldLabel, FieldError } from "@/components/ui/field";
 import { useLogin } from "../hooks/use-login";
-import { Spinner } from "@repo/ui/components/spinner";
+import { Spinner } from "@/components/ui/spinner";
 
 export function LoginForm() {
   const { form, isSubmitting, onSubmit } = useLogin();
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+    <form onSubmit={onSubmit} className="grid gap-4">
         <Controller
           name="email"
           control={form.control}
@@ -62,6 +60,5 @@ export function LoginForm() {
           Acceder a mi Cuenta
         </Button>
       </form>
-    </Form>
   );
 }

@@ -5,17 +5,18 @@ import {
   CardContent,
   CardFooter,
   CardDescription,
-} from "@repo/ui/components/card";
+} from "@/components/ui/card";
 import { LoginForm } from "./components/login-form";
 import Link from "next/link";
-import { LogIn } from "lucide-react";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { Login01Icon } from "@hugeicons/core-free-icons";
 
 export default function LoginPage() {
   return (
     <Card className=" w-full max-w-md">
       <CardHeader className="text-center space-y-2">
         <div className="mx-auto w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mb-2">
-          <LogIn className="h-5 w-5 text-primary" />
+          <HugeiconsIcon icon={Login01Icon} className="h-5 w-5 text-primary" />
         </div>
         <CardTitle className="text-2xl font-bold">
           ¡Bienvenido de nuevo!

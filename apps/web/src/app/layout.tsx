@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import { Inter, Geist } from "next/font/google";
 import "./globals.css";
-import { Toaster } from "@repo/ui/components/sonner";
 import { ThemeProvider } from "@/providers/theme-provider";
-import { cn } from "@repo/ui/lib/utils";
+import { cn } from "@/lib/utils";
+import { Toaster } from "@/components/ui/toast";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,7 +21,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" suppressHydrationWarning className={cn("font-sans", geist.variable)}>
+    <html
+      lang="es"
+      suppressHydrationWarning
+      className={cn("font-sans", geist.variable)}
+    >
       <body className={cn(inter.className, "bg-muted/50 text-foreground")}>
         <ThemeProvider
           attribute="class"
@@ -28,8 +33,8 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
-          <Toaster position="top-center" />
+          <TooltipProvider>{children}</TooltipProvider>
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

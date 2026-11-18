@@ -37,7 +37,7 @@ This file provides AI agents with instant architectural orientation for this pro
   - GroovePack communication pipeline: `apiToast -> Server Action -> apiAction -> apiClient` using Hono RPC (`hc<AppType>`) over Cloudflare Service Binding (`env.API.fetch`).
 
 ## 3. Source Modules & Data Flow
-- `apps/api`: Cloudflare Worker entry at `src/index.ts`. Injects D1 (`ctx.set("db", getD1())`) per request, handles `AppError` and validation errors globally using `@3lineas/groovepack/logger`, orchestrates multi-step routes with `@3lineas/groovepack/pipeline`, and mounts routes under `/api`.
+- `apps/api`: Cloudflare Worker entry at `src/index.ts`. Injects D1 (`ctx.set("db", getD1())`) per request, handles `AppError`, `404` (`notFoundHandler`), and validation errors globally using `@3lineas/groovepack/logger` returning standardized `ActionResponse` JSON with user-safe messages (never exposing internal paths, HTTP methods, `details`, or stack traces), orchestrates multi-step routes with `@3lineas/groovepack/pipeline`, and mounts routes under `/api`.
 - `apps/web`: Next.js App Router deployed to Cloudflare Workers via OpenNext (`wrangler.jsonc`). Communicates with `apps/api` via the `API` Service Binding (`apps/web/src/lib/api-client.ts`) wrapped by `apiAction` (`apps/web/src/actions/api-action.ts`).
 - `packages/ui`: Shared design system components consumed via `@repo/ui/components/*`.
 

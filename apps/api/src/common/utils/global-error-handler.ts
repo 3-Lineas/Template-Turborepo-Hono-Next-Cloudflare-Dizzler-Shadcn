@@ -16,9 +16,9 @@ export function globalErrorHandler(err: Error, ctx: AppContext) {
 
   const body: ActionResponse<never> = {
     success: false,
+    message: appError.message,
     error: appError.message,
     code: appError.code,
-    ...(appError.details ? { details: appError.details } : {}),
   };
 
   return ctx.json(body, appError.statusCode as ContentfulStatusCode);

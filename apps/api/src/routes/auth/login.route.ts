@@ -23,7 +23,6 @@ export const loginRoute = new Hono<{
   createRouteHandler(
     async ({ db, ctx }) => {
       const input = await ctx.req.json();
-
       const pipelineContext: LoginContext = {
         db,
         jwtSecret: ctx.env.JWT_SECRET,
@@ -40,7 +39,9 @@ export const loginRoute = new Hono<{
         .then();
 
       if (!completed.result) {
-        throw new InternalServerError("No se pudo completar el inicio de sesión.");
+        throw new InternalServerError(
+          "No se pudo completar el inicio de sesión.",
+        );
       }
 
       return completed.result;

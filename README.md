@@ -34,8 +34,8 @@ flowchart LR
 | :--- | :--- |
 | **Monorepo** | Turborepo, `pnpm@9.0.0`, TypeScript 6, Prettier, ESLint 9 |
 | **Frontend** | Vinext (`vite`), Next.js App Router, React 19 + React Compiler |
-| **UI & Styling** | Tailwind CSS v4, Shadcn UI (`@base-ui/react`), Hugeicons, `react-hook-form` |
-| **Backend** | Hono on Cloudflare Workers, `@3lineas/groovepack` (`pipeline`, `logger`), `jose` JWT |
+| **UI & Styling** | Tailwind CSS v4, Shadcn UI (`@base-ui/react`), Hugeicons, `@formisch/react` |
+| **Backend** | Hono on Cloudflare Workers, `@3lineas/groovepack` (`pipeline`, `logger`, `errors`), `jose` JWT |
 | **Database** | Native Cloudflare D1 (`env.DB` via `getD1()`) with raw SQL migrations |
 | **Validation** | Valibot (`@hono/valibot-validator`) |
 | **Testing** | Vitest + `better-sqlite3` in-memory D1 test harness |

@@ -25,7 +25,7 @@
     "node": ">=18"
   },
   "author": "Diego Nelson (3 Lineas)",
-  "version": "1.0.2",
+  "version": "1.0.6",
   "pnpm": {
     "peerDependencyRules": {
       "allowedVersions": {

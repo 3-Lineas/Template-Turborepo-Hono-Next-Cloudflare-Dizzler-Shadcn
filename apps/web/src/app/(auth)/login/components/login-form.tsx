@@ -1,6 +1,6 @@
 "use client";
 
-import { Controller } from "react-hook-form";
+import { Field as FormField, Form } from "@formisch/react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,53 +12,61 @@ export function LoginForm() {
   const { form, isSubmitting, onSubmit } = useLogin();
 
   return (
-    <form onSubmit={onSubmit} className="grid gap-4">
-        <Controller
-          name="email"
-          control={form.control}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor={field.name}>Email</FieldLabel>
+    <Form of={form} onSubmit={onSubmit} className="grid gap-4">
+      <FormField of={form} path={["email"]}>
+        {(field) => {
+          const invalid = Boolean(field.errors?.length);
+          return (
+            <Field data-invalid={invalid}>
+              <FieldLabel htmlFor="email">Email</FieldLabel>
               <Input
-                {...field}
-                id={field.name}
+                {...field.props}
+                id="email"
+                value={field.input ?? ""}
                 type="email"
                 placeholder="m@example.com"
                 autoComplete="email"
                 disabled={isSubmitting}
-                aria-invalid={fieldState.invalid}
+                aria-invalid={invalid}
               />
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+              {invalid && (
+                <FieldError errors={field.errors?.map((message) => ({ message }))} />
+              )}
             </Field>
-          )}
-        />
+          );
+        }}
+      </FormField>
 
-        <Controller
-          name="password"
-          control={form.control}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
+      <FormField of={form} path={["password"]}>
+        {(field) => {
+          const invalid = Boolean(field.errors?.length);
+          return (
+            <Field data-invalid={invalid}>
               <div className="flex items-center justify-between">
-                <FieldLabel htmlFor={field.name}>Contraseña</FieldLabel>
+                <FieldLabel htmlFor="password">Contraseña</FieldLabel>
               </div>
               <Input
-                {...field}
-                id={field.name}
+                {...field.props}
+                id="password"
+                value={field.input ?? ""}
                 type="password"
                 placeholder="••••••••"
                 autoComplete="current-password"
                 disabled={isSubmitting}
-                aria-invalid={fieldState.invalid}
+                aria-invalid={invalid}
               />
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+              {invalid && (
+                <FieldError errors={field.errors?.map((message) => ({ message }))} />
+              )}
             </Field>
-          )}
-        />
+          );
+        }}
+      </FormField>
 
-        <Button type="submit" className="w-full" disabled={isSubmitting}>
-          {isSubmitting && <Spinner />}
-          Acceder a mi Cuenta
-        </Button>
-      </form>
+      <Button type="submit" className="w-full" disabled={isSubmitting}>
+        {isSubmitting && <Spinner />}
+        Acceder a mi Cuenta
+      </Button>
+    </Form>
   );
 }

@@ -1,22 +1,16 @@
 "use client";
 
 import { apiToast } from "@3lineas/groovepack/api-toast";
-import { valibotResolver } from "@hookform/resolvers/valibot";
+import { useForm } from "@formisch/react";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
 import { registerAction } from "@/actions/auth/register.action";
 import { RegisterSchema } from "@/app/(auth)/register/schemas/register.schema";
 import type { RegisterInput } from "@/app/(auth)/register/types/register-input.type";
 
 export function useRegister() {
   const router = useRouter();
-  const form = useForm<RegisterInput>({
-    resolver: valibotResolver(RegisterSchema),
-    defaultValues: {
-      name: "",
-      email: "",
-      password: "",
-    },
+  const form = useForm({
+    schema: RegisterSchema,
   });
 
   const onSubmit = async (values: RegisterInput) => {
@@ -30,7 +24,7 @@ export function useRegister() {
 
   return {
     form,
-    onSubmit: form.handleSubmit(onSubmit),
-    isSubmitting: form.formState.isSubmitting,
+    onSubmit,
+    isSubmitting: form.isSubmitting,
   };
 }

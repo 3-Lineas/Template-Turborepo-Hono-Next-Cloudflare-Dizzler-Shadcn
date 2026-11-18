@@ -1,5 +1,5 @@
-import { AppError } from "../../errors/app-error";
-import { InternalServerError } from "../../errors/common/internal-server.error";
+import { AppError } from "@3lineas/groovepack/errors";
+import { internalServerError } from "../../errors/common/internal-server.error";
 
 export function normalizeError(error: unknown): AppError {
   if (error instanceof AppError) {
@@ -7,11 +7,11 @@ export function normalizeError(error: unknown): AppError {
   }
 
   if (error instanceof Error) {
-    return new InternalServerError(
+    return internalServerError(
       "Tuvimos un inconveniente inesperado en el servidor. Por favor, intenta nuevamente en unos momentos.",
       { originalMessage: error.message },
     );
   }
 
-  return new InternalServerError();
+  return internalServerError();
 }

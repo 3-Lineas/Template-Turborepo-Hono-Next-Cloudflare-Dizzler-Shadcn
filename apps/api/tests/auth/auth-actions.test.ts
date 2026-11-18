@@ -3,8 +3,8 @@ import { ensureEmailAvailableAction } from "@/actions/auth/ensure-email-availabl
 import { hashUserPasswordAction } from "@/actions/auth/hash-user-password.action";
 import { persistUserAction } from "@/actions/auth/persist-user.action";
 import { verifyUserPasswordAction } from "@/actions/auth/verify-user-password.action";
-import { DuplicateEmailError } from "@/errors/auth/duplicate-email.error";
-import { InvalidCredentialsError } from "@/errors/auth/invalid-credentials.error";
+import { duplicateEmailError } from "@/errors/auth/duplicate-email.error";
+import { invalidCredentialsError } from "@/errors/auth/invalid-credentials.error";
 import type { LoginContext } from "@/types/auth/login-context.type";
 import type { RegisterContext } from "@/types/auth/register-context.type";
 import { createInMemoryD1 } from "../mocks/in-memory-d1";
@@ -31,7 +31,7 @@ describe("Auth Atomic Actions", () => {
 
     await expect(
       ensureEmailAvailableAction(registerCtx),
-    ).rejects.toBeInstanceOf(DuplicateEmailError);
+    ).rejects.toSatisfy(duplicateEmailError.is);
   });
 
   it("verifica contraseña correcta y rechaza contraseña incorrecta", async () => {
@@ -72,6 +72,6 @@ describe("Auth Atomic Actions", () => {
     loginCtx.input.password = "wrong-password";
     await expect(
       verifyUserPasswordAction(loginCtx),
-    ).rejects.toBeInstanceOf(InvalidCredentialsError);
+    ).rejects.toSatisfy(invalidCredentialsError.is);
   });
 });

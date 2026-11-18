@@ -1,18 +1,18 @@
 import { signJwt } from "../../common/crypto/sign-jwt";
-import { InternalServerError } from "../../errors/common/internal-server.error";
+import { internalServerError } from "../../errors/common/internal-server.error";
 import type { LoginContext } from "../../types/auth/login-context.type";
 
 export async function generateAuthTokenAction(
   context: LoginContext,
 ): Promise<LoginContext> {
   if (!context.jwtSecret) {
-    throw new InternalServerError(
+    throw internalServerError(
       "Falta la configuración de seguridad JWT_SECRET en el servidor.",
     );
   }
 
   if (!context.user) {
-    throw new InternalServerError("No se pudo resolver el usuario autenticado.");
+    throw internalServerError("No se pudo resolver el usuario autenticado.");
   }
 
   const token = await signJwt(

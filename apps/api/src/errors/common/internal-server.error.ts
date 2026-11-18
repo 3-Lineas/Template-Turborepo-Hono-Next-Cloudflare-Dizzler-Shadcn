@@ -1,16 +1,10 @@
-import { AppError } from "../app-error";
+import { createAppError } from "@3lineas/groovepack/errors";
 
-export class InternalServerError extends AppError {
-  constructor(
-    message = "Tuvimos un inconveniente inesperado en el servidor. Por favor, intenta nuevamente en unos momentos.",
-    details?: Record<string, unknown>,
-  ) {
-    super({
-      message,
-      statusCode: 500,
-      code: "INTERNAL_SERVER_ERROR",
-      silent: false,
-      details,
-    });
-  }
-}
+export const internalServerError = createAppError({
+  name: "InternalServerError",
+  statusCode: 500,
+  code: "INTERNAL_SERVER_ERROR",
+  defaultMessage:
+    "Tuvimos un inconveniente inesperado en el servidor. Por favor, intenta nuevamente en unos momentos.",
+  silent: false,
+});

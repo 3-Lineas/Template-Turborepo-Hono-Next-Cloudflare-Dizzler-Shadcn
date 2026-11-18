@@ -8,7 +8,7 @@ import { createRouteHandler } from "../../common/utils/create-route-handler";
 import { validationHook } from "../../common/utils/validation-hook";
 import { LoginDto } from "../../dtos/auth/login.dto";
 import { LoginResponseDto } from "../../dtos/auth/login-response.dto";
-import { InternalServerError } from "../../errors/common/internal-server.error";
+import { internalServerError } from "../../errors/common/internal-server.error";
 import { Pipeline } from "@3lineas/groovepack/pipeline";
 import type { LoginContext } from "../../types/auth/login-context.type";
 import type { CustomVars } from "../../types/context/custom-vars.type";
@@ -39,7 +39,7 @@ export const loginRoute = new Hono<{
         .then();
 
       if (!completed.result) {
-        throw new InternalServerError(
+        throw internalServerError(
           "No se pudo completar el inicio de sesión.",
         );
       }

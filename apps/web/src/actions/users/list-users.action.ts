@@ -1,13 +1,14 @@
 "use server";
 
 import { apiAction } from "@3lineas/groovepack/api-action";
-import { logger } from "@3lineas/groovepack/logger";
-import { getApiClient } from "@/lib/rpc/get-api-client";
+import { listUsersError } from "@/errors/users/list-users.error";
+import { apiClient } from "@/lib/api-client";
 import type { UserItem } from "@/types/users/user-item.type";
 
 export async function listUsersAction() {
   return apiAction<UserItem[]>({
-    apiCall: async () => (await getApiClient()).users.list.$get(),
-    onError: (msg, ctx) => logger.error(msg, ctx),
+    apiCall: apiClient.users.list.$get(),
+    fallback: [],
+    onError: listUsersError,
   });
 }

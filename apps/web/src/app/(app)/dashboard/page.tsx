@@ -8,8 +8,7 @@ import {
 import { toArgTime } from "@/lib/timezone";
 
 export default async function DashboardPage() {
-  const response = await listUsersAction();
-  const users = response.success && response.data ? response.data : [];
+  const users = await listUsersAction();
 
   return (
     <div>
@@ -26,7 +25,7 @@ export default async function DashboardPage() {
             <CardContent>
               <p className="text-sm text-muted-foreground">ID: {user.id}</p>
               <p className="text-sm text-muted-foreground">
-                Joined: {toArgTime(user.createdAt, "Y-m-d")}
+                Registrado el: {toArgTime(user.createdAt, "Y-m-d")}
               </p>
             </CardContent>
           </Card>

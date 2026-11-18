@@ -1,4 +1,4 @@
-import { DuplicateEmailError } from "../../errors/auth/duplicate-email.error";
+import { duplicateEmailError } from "../../errors/auth/duplicate-email.error";
 import type { RegisterContext } from "../../types/auth/register-context.type";
 
 export async function ensureEmailAvailableAction(
@@ -10,7 +10,7 @@ export async function ensureEmailAvailableAction(
     .first<{ id: number }>();
 
   if (existing) {
-    throw new DuplicateEmailError();
+    throw duplicateEmailError();
   }
 
   return context;

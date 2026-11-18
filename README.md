@@ -1,93 +1,136 @@
-# CF Turborepo Next Hono
+<div align="center">
 
-Este proyecto es un monorepo Turborepo que integra Next.js (Frontend) y Hono (Backend) sobre Cloudflare Workers/Pages, utilizando D1 como base de datos y Drizzle ORM.
+# CF Turborepo Stack
 
-## Instalación rápida 🚀
+**Production-ready Cloudflare Workers monorepo combining Vinext (Next.js App Router + React 19), Hono RPC, native Cloudflare D1, Valibot, and Shadcn UI.**
 
-Puedes iniciar un nuevo proyecto utilizando nuestro CLI interactivo:
+[![Turborepo](https://img.shields.io/badge/Turborepo-2.11-EF4444?style=flat-square&logo=turborepo&logoColor=white)](https://turbo.build/)
+[![Cloudflare Workers](https://img.shields.io/badge/Cloudflare-Workers%20%26%20D1-F38020?style=flat-square&logo=cloudflare&logoColor=white)](https://workers.cloudflare.com/)
+[![Hono](https://img.shields.io/badge/Hono-4.13-E36002?style=flat-square&logo=hono&logoColor=white)](https://hono.dev/)
+[![Next.js](https://img.shields.io/badge/Vinext%20%2F%20Next.js-React%2019-000000?style=flat-square&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-6.0-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Valibot](https://img.shields.io/badge/Valibot-1.2-0EA5E9?style=flat-square)](https://valibot.dev/)
+
+</div>
+
+---
+
+## Architecture
+
+`apps/web` communicates with `apps/api` over Cloudflare's internal network via a **Service Binding** (`API`) and end-to-end typed **Hono RPC** (`hc<AppType>`), eliminating public API round-trips and preserving strict request/response type safety.
+
+```mermaid
+flowchart LR
+  Browser["Browser / Client"] -->|"HTTPS"| WebWorker["apps/web (Vinext + Next.js App Router)"]
+  WebWorker -->|"Hono RPC via Service Binding (API)"| ApiWorker["apps/api (Hono + Pipeline + Valibot)"]
+  ApiWorker -->|"getD1() (env.DB)"| D1[("Cloudflare D1 (SQLite)")]
+```
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+| :--- | :--- |
+| **Monorepo** | Turborepo, `pnpm@9.0.0`, TypeScript 6, Prettier, ESLint 9 |
+| **Frontend** | Vinext (`vite`), Next.js App Router, React 19 + React Compiler |
+| **UI & Styling** | Tailwind CSS v4, Shadcn UI (`@base-ui/react`), Hugeicons, `react-hook-form` |
+| **Backend** | Hono on Cloudflare Workers, `@3lineas/groovepack` (`pipeline`, `logger`), `jose` JWT |
+| **Database** | Native Cloudflare D1 (`env.DB` via `getD1()`) with raw SQL migrations |
+| **Validation** | Valibot (`@hono/valibot-validator`) |
+| **Testing** | Vitest + `better-sqlite3` in-memory D1 test harness |
+
+---
+
+## Quick Start
+
+### 1. Scaffold a New Project
 
 ```bash
 npx @3lineas/create-cf-stack@latest
 ```
 
-## Comandos Principales (Raíz)
+### 2. Install Dependencies & Configure Environment
 
-Estos comandos se ejecutan desde la raíz del proyecto y orquestan tareas en todo el monorepo.
-
-| Comando            | Descripción                                                                    |
-| :----------------- | :----------------------------------------------------------------------------- |
-| `pnpm dev`         | Inicia el entorno de desarrollo local para todas las aplicaciones (Web + API). |
-| `pnpm build`       | Construye todas las aplicaciones y paquetes para producción.                   |
-| `pnpm lint`        | Ejecuta el linter en todos los paquetes.                                       |
-| `pnpm format`      | Formatea el código de todo el proyecto usando Prettier.                        |
-| `pnpm check-types` | Verifica los tipos de TypeScript en todo el proyecto.                          |
-
-## Gestión de Base de Datos (D1 + Drizzle)
-
-Comandos para gestionar la base de datos Cloudflare D1.
-
-| Comando               | Descripción                                                                                      |
-| :-------------------- | :----------------------------------------------------------------------------------------------- |
-| `pnpm db:generate`    | Genera los archivos de migración SQL basados en los cambios del esquema Drizzle (`apps/api/src/db`). |
-| `pnpm migrate:local`  | Aplica las migraciones pendientes a la base de datos D1 **local**.                               |
-| `pnpm migrate:remote` | Aplica las migraciones pendientes a la base de datos D1 **remota (producción)**.                 |
-| `pnpm db:studio`      | Abre Drizzle Studio para visualizar y editar la base de datos localmente.                        |
-
-## Comandos Específicos por Aplicación
-
-Aunque se recomienda usar los comandos raíz, aquí están los comandos específicos disponibles en cada paquete.
-
-### Frontend (`apps/web`)
-
-Desarrollado con Next.js 16 y desplegado en Cloudflare Workers via OpenNext.
-
-- `pnpm --filter web dev`: Inicia solo el frontend en modo desarrollo.
-- `pnpm --filter web build`: Construye la aplicación Next.js.
-- `pnpm --filter web deploy`: Despliega la aplicación a Cloudflare Workers.
-- `pnpm --filter web preview`: Genera una vista previa del despliegue.
-- `pnpm --filter web cf-typegen`: Genera los tipos para las variables de entorno de Cloudflare.
-
-### Backend (`apps/api`)
-
-API REST desarrollada con Hono y desplegada en Cloudflare Workers. Incluye la configuración y esquemas de la base de datos (Drizzle).
-
-- `pnpm --filter @repo/api dev`: Inicia solo la API en modo desarrollo con Wrangler.
-- `pnpm --filter @repo/api deploy`: Despliega la API a Cloudflare Workers.
-
-## Estructura del Proyecto
-
-- **apps/web**: Aplicación Next.js 16 (App Router, Tailwind CSS, Shadcn UI). Consume Hono RPC mediante Cloudflare Service Bindings.
-- **apps/api**: API Server (Hono) y Capa de Datos (Drizzle ORM).
-- **packages/typescript-config**: Configuraciones de TypeScript compartidas.
-- **packages/ui**: Componentes base de UI (Shadcn).
-
-## Gestión de Componentes UI (shadcn/ui)
-
-Los componentes de UI se encuentran centralizados en el paquete `packages/ui`. Para agregar un nuevo componente desde la raíz del proyecto:
+> [!NOTE]
+> Requires **Node.js >= 18** and **pnpm 9**.
 
 ```bash
-pnpm ui:add [nombre-del-componente]
+pnpm install
+cp apps/api/.dev.vars.example apps/api/.dev.vars
+cp apps/web/.env.example apps/web/.env
 ```
 
-Ejemplo:
+Update `JWT_SECRET` in [apps/api/.dev.vars.example](./apps/api/.dev.vars.example) (copied to `.dev.vars`) with a secure random string of at least 32 characters.
+
+### 3. Initialize Local Database & Start Development
+
+```bash
+pnpm db:migrate
+pnpm dev
+```
+
+---
+
+## Workspace Structure
+
+```text
+.
+├── apps/
+│   ├── api/                 # Hono Worker, atomic Actions, Pipeline orchestration, D1 SQL migrations & Vitest suite
+│   └── web/                 # Vinext / Next.js App Router frontend, Server Actions, Shadcn UI & Service Binding client
+└── packages/
+    ├── eslint-config/       # Shared ESLint 9 flat configurations
+    └── typescript-config/   # Shared strict TypeScript base configurations
+```
+
+---
+
+## Scripts Reference
+
+### Monorepo Root
+
+| Command | Description |
+| :--- | :--- |
+| `pnpm dev` | Starts all apps in local development mode (`turbo run dev:vinext`). |
+| `pnpm build` | Builds all apps and shared packages for production. |
+| `pnpm check-types` | Runs `tsc --noEmit` across the monorepo. |
+| `pnpm lint` | Runs ESLint across all workspaces. |
+| `pnpm format` | Formats `.ts`, `.tsx`, and `.md` files with Prettier. |
+
+### Database (Cloudflare D1)
+
+| Command | Description |
+| :--- | :--- |
+| `pnpm db:migrate` | Runs local D1 migrations via `apps/api/scripts/db-migrate.mjs`. |
+| `pnpm db:migrate:fresh` | Drops and re-applies all local D1 migrations from scratch. |
+| `pnpm db:seed` | Seeds the local D1 database. |
+| `pnpm migrate:local` | Applies pending migrations via `wrangler d1 migrations apply DB --local`. |
+| `pnpm migrate:remote` | Applies pending migrations to **production** (`--remote`). |
+
+### App-Specific Commands
+
+- **Frontend (`apps/web`)**:
+  - `pnpm --filter web dev:vinext` / `pnpm --filter web dev` — Run Vinext (Vite) or Next.js Turbopack dev server.
+  - `pnpm --filter web build` / `pnpm --filter web deploy:vinext` — Build and deploy to Cloudflare Workers.
+  - `pnpm --filter web cf-typegen` — Regenerate `cloudflare-env.d.ts` from `wrangler.jsonc`.
+- **Backend (`apps/api`)**:
+  - `pnpm --filter @repo/api dev` / `pnpm --filter @repo/api deploy` — Run local Wrangler dev server or deploy Worker.
+  - `pnpm --filter @repo/api test` — Execute the Vitest unit & integration test suite.
+  - `pnpm --filter @repo/api cf-typegen` — Regenerate `worker-configuration.d.ts` from `wrangler.toml`.
+
+---
+
+## Adding UI Components
+
+Shadcn UI components live inside `apps/web`. Install new components from the repository root:
 
 ```bash
 pnpm ui:add button
 ```
 
-El componente se agregará en `packages/ui/src/components` y estará disponible para usar en `apps/web` importándolo desde `@repo/ui/components/[nombre]`.
+---
 
-## Flujo de Trabajo Recomendado
+## Credits
 
-1.  **Desarrollo**: Ejecuta `pnpm dev` para levantar todo el entorno.
-2.  **Cambios en DB**:
-    - Modifica el esquema en `apps/api/src/db/schema.ts`.
-    - Ejecuta `pnpm db:generate` para crear la migración.
-    - Ejecuta `pnpm migrate:local` para aplicar cambios localmente.
-3.  **Despliegue**:
-    - Ejecuta `pnpm migrate:remote` para actualizar la BD de producción.
-    - Ejecuta `pnpm build` y luego los comandos de deploy específicos si no tienes CI/CD configurado.
-
-## Créditos 👨‍💻
-
-Desarrollado por **Diego Nelson** para [3 Lineas](https://3lineas.com).
+Built and maintained by **Diego Nelson** for [3 Lineas](https://3lineas.com).

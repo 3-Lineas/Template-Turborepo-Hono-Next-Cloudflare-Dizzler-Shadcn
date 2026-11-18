@@ -1,4 +1,4 @@
-import { InvalidCredentialsError } from "../../errors/auth/invalid-credentials.error";
+import { invalidCredentialsError } from "../../errors/auth/invalid-credentials.error";
 import type { LoginContext } from "../../types/auth/login-context.type";
 import type { UserRow } from "../../types/users/user-row.type";
 
@@ -13,7 +13,7 @@ export async function findUserByEmailAction(
     .first<UserRow>();
 
   if (!user) {
-    throw new InvalidCredentialsError();
+    throw invalidCredentialsError();
   }
 
   context.user = user;

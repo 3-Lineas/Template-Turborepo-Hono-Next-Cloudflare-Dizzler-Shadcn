@@ -1,4 +1,4 @@
-import { InternalServerError } from "../../errors/common/internal-server.error";
+import { internalServerError } from "../../errors/common/internal-server.error";
 import type { RegisterContext } from "../../types/auth/register-context.type";
 import type { UserPublic } from "../../types/users/user-public.type";
 
@@ -6,7 +6,7 @@ export async function persistUserAction(
   context: RegisterContext,
 ): Promise<RegisterContext> {
   if (!context.passwordHash) {
-    throw new InternalServerError("No se pudo procesar la contraseña.");
+    throw internalServerError("No se pudo procesar la contraseña.");
   }
 
   const createdAt = Math.floor(Date.now() / 1000);
@@ -24,7 +24,7 @@ export async function persistUserAction(
     .first<UserPublic>();
 
   if (!createdUser) {
-    throw new InternalServerError("No se pudo registrar el usuario.");
+    throw internalServerError("No se pudo registrar el usuario.");
   }
 
   context.user = createdUser;

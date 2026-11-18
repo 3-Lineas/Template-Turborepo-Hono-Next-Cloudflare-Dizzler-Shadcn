@@ -20,7 +20,7 @@ export function LogoutButton() {
 
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
-      <AlertDialogTrigger render={<Button disabled={isPending} size="sm" />}>
+      <AlertDialogTrigger render={<Button disabled={isPending} />}>
         Cerrar Sesión
       </AlertDialogTrigger>
       <AlertDialogContent>
@@ -32,8 +32,8 @@ export function LogoutButton() {
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel size="sm">Cancelar</AlertDialogCancel>
-          <AlertDialogAction onClick={() => handleLogout()} size="sm">
+          <AlertDialogCancel>Cancelar</AlertDialogCancel>
+          <AlertDialogAction onClick={() => handleLogout()}>
             {isPending && <Spinner />}
             Cerrar Sesión
           </AlertDialogAction>

@@ -1,6 +1,6 @@
 "use client";
 
-import { Controller } from "react-hook-form";
+import { Field as FormField, Form } from "@formisch/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Field, FieldLabel, FieldError } from "@/components/ui/field";
@@ -13,60 +13,69 @@ export function RegisterForm() {
   const { form, isSubmitting, onSubmit } = useRegister();
 
   return (
-    <form onSubmit={onSubmit} className="grid gap-4">
-        <Controller
-          name="name"
-          control={form.control}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor={field.name}>Nombre Completo</FieldLabel>
+    <Form of={form} onSubmit={onSubmit} className="grid gap-4">
+      <FormField of={form} path={["name"]}>
+        {(field) => {
+          const invalid = Boolean(field.errors?.length);
+          return (
+            <Field data-invalid={invalid}>
+              <FieldLabel htmlFor="name">Nombre Completo</FieldLabel>
               <Input
-                {...field}
-                id={field.name}
+                {...field.props}
+                id="name"
+                value={field.input ?? ""}
                 placeholder="Juan Pérez"
                 autoComplete="name"
                 disabled={isSubmitting}
-                aria-invalid={fieldState.invalid}
+                aria-invalid={invalid}
               />
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+              {invalid && (
+                <FieldError errors={field.errors?.map((message) => ({ message }))} />
+              )}
             </Field>
-          )}
-        />
+          );
+        }}
+      </FormField>
 
-        <Controller
-          name="email"
-          control={form.control}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor={field.name}>Correo Electrónico</FieldLabel>
+      <FormField of={form} path={["email"]}>
+        {(field) => {
+          const invalid = Boolean(field.errors?.length);
+          return (
+            <Field data-invalid={invalid}>
+              <FieldLabel htmlFor="email">Correo Electrónico</FieldLabel>
               <Input
-                {...field}
-                id={field.name}
+                {...field.props}
+                id="email"
+                value={field.input ?? ""}
                 type="email"
                 placeholder="tu@ejemplo.com"
                 autoComplete="email"
                 disabled={isSubmitting}
-                aria-invalid={fieldState.invalid}
+                aria-invalid={invalid}
               />
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+              {invalid && (
+                <FieldError errors={field.errors?.map((message) => ({ message }))} />
+              )}
             </Field>
-          )}
-        />
+          );
+        }}
+      </FormField>
 
-        <Controller
-          name="password"
-          control={form.control}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor={field.name}>Contraseña</FieldLabel>
+      <FormField of={form} path={["password"]}>
+        {(field) => {
+          const invalid = Boolean(field.errors?.length);
+          return (
+            <Field data-invalid={invalid}>
+              <FieldLabel htmlFor="password">Contraseña</FieldLabel>
               <Input
-                {...field}
-                id={field.name}
+                {...field.props}
+                id="password"
+                value={field.input ?? ""}
                 type="password"
                 placeholder="••••••••"
                 autoComplete="new-password"
                 disabled={isSubmitting}
-                aria-invalid={fieldState.invalid}
+                aria-invalid={invalid}
               />
               <div className="mt-2 text-xs text-muted-foreground p-2 bg-muted/50 rounded-md flex gap-2 items-start">
                 <HugeiconsIcon
@@ -80,15 +89,18 @@ export function RegisterForm() {
                   <li>Al menos 1 carácter especial</li>
                 </ul>
               </div>
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+              {invalid && (
+                <FieldError errors={field.errors?.map((message) => ({ message }))} />
+              )}
             </Field>
-          )}
-        />
+          );
+        }}
+      </FormField>
 
-        <Button type="submit" className="w-full" disabled={isSubmitting}>
-          {isSubmitting && <Spinner />}
-          Crear Cuenta
-        </Button>
-      </form>
+      <Button type="submit" className="w-full" disabled={isSubmitting}>
+        {isSubmitting && <Spinner />}
+        Crear Cuenta
+      </Button>
+    </Form>
   );
 }

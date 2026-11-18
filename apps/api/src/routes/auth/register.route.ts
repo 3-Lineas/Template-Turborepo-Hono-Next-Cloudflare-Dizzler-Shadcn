@@ -8,7 +8,7 @@ import { createRouteHandler } from "../../common/utils/create-route-handler";
 import { validationHook } from "../../common/utils/validation-hook";
 import { RegisterDto } from "../../dtos/auth/register.dto";
 import { UserResponseDto } from "../../dtos/users/user-response.dto";
-import { InternalServerError } from "../../errors/common/internal-server.error";
+import { internalServerError } from "../../errors/common/internal-server.error";
 import { Pipeline } from "@3lineas/groovepack/pipeline";
 import type { RegisterContext } from "../../types/auth/register-context.type";
 import type { CustomVars } from "../../types/context/custom-vars.type";
@@ -39,7 +39,7 @@ export const registerRoute = new Hono<{
         .then();
 
       if (!completed.user) {
-        throw new InternalServerError("No se pudo completar el registro.");
+        throw internalServerError("No se pudo completar el registro.");
       }
 
       return completed.user;

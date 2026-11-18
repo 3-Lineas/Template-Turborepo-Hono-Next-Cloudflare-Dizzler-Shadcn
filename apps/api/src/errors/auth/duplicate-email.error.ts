@@ -1,14 +1,10 @@
-import { AppError } from "../app-error";
+import { createAppError } from "@3lineas/groovepack/errors";
 
-export class DuplicateEmailError extends AppError {
-  constructor(
-    message = "Ya existe una cuenta registrada con este correo electrónico. Intenta iniciar sesión.",
-  ) {
-    super({
-      message,
-      statusCode: 409,
-      code: "DUPLICATE_EMAIL",
-      silent: true,
-    });
-  }
-}
+export const duplicateEmailError = createAppError({
+  name: "DuplicateEmailError",
+  statusCode: 409,
+  code: "DUPLICATE_EMAIL",
+  defaultMessage:
+    "Ya existe una cuenta registrada con este correo electrónico. Intenta iniciar sesión.",
+  silent: true,
+});

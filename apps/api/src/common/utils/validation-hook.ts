@@ -1,6 +1,6 @@
 import * as v from "valibot";
 import type { BaseIssue, BaseSchema } from "valibot";
-import { ValidationError } from "../../errors/common/validation.error";
+import { validationError } from "../../errors/common/validation.error";
 
 export function validationHook<
   TSchema extends BaseSchema<unknown, unknown, BaseIssue<unknown>>,
@@ -18,7 +18,7 @@ export function validationHook<
     firstIssue?.message ??
     "Por favor, revisa los datos ingresados e inténtalo de nuevo.";
 
-  throw new ValidationError(message, {
+  throw validationError(message, {
     target: result.target,
     nested: flattened.nested,
   });

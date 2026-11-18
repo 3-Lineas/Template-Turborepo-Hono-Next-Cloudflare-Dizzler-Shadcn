@@ -1,12 +1,12 @@
 import { verifyPassword } from "../../common/crypto/verify-password";
-import { InvalidCredentialsError } from "../../errors/auth/invalid-credentials.error";
+import { invalidCredentialsError } from "../../errors/auth/invalid-credentials.error";
 import type { LoginContext } from "../../types/auth/login-context.type";
 
 export async function verifyUserPasswordAction(
   context: LoginContext,
 ): Promise<LoginContext> {
   if (!context.user) {
-    throw new InvalidCredentialsError();
+    throw invalidCredentialsError();
   }
 
   const isValid = await verifyPassword(
@@ -15,7 +15,7 @@ export async function verifyUserPasswordAction(
   );
 
   if (!isValid) {
-    throw new InvalidCredentialsError();
+    throw invalidCredentialsError();
   }
 
   return context;

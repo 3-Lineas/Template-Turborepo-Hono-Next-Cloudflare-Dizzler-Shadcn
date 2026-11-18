@@ -5,18 +5,17 @@ This file provides AI agents with instant architectural orientation for this pro
 ## 1. Stack & Dependencies
 - **Monorepo & Build System**: Turborepo (`^2.9.18`) + `pnpm@9.0.0` (`node >= 18`) + TypeScript (`^6.0.3` / `5.9.2`) + Prettier (`^3.7.4`).
 - **Backend (`apps/api` — `@repo/api`)**:
-  - Runtime: Cloudflare Workers (`wrangler ^4.103.0`).
-  - Framework: Hono (`^4.12.26`).
+  - Runtime: Cloudflare Workers (`wrangler ^4.164.0`).
+  - Framework: Hono (`^4.13.19`) + `@3lineas/groovepack` (`^1.6.0`).
   - Database: Cloudflare D1 nativo (`binding = "DB"`) vía `getD1()` (`import { env } from "cloudflare:workers"`) y migraciones SQL en `apps/api/migrations/` (sin Drizzle ORM).
-  - Auth: `jose` (`^6.1.3`) + Web Crypto PBKDF2 para hashing de contraseñas y JWT (requiere `JWT_SECRET` en `ctx.env` / `.dev.vars` sin fallback).
-  - Validation & Testing: Valibot (`valibot` + `@hono/valibot-validator`) y Vitest (`vitest` con adaptador D1 in-memory).
+  - Auth: `jose` (`^6.2.17`) + Web Crypto PBKDF2 para hashing de contraseñas y JWT (requiere `JWT_SECRET` en `ctx.env` / `.dev.vars` sin fallback).
+  - Validation & Testing: Valibot (`valibot` + `@hono/valibot-validator`) y Vitest (`vitest` con adaptador D1 in-memory vía `better-sqlite3`).
 - **Frontend (`apps/web` — `web`)**:
-  - Framework: Next.js `16.2.9` (App Router, Turbopack) + React `19.2.7` (`babel-plugin-react-compiler`).
-  - Cloudflare Adapter: `@opennextjs/cloudflare` (`^1.19.11`) with Service Binding `API` -> `api` worker and `WORKER_SELF_REFERENCE`.
-  - Styling & UI: Tailwind CSS v4 (`^4.3.1`), `@repo/ui` (Shadcn UI / Radix UI / Base UI), `lucide-react`, `sonner`, `next-themes`.
-  - Forms: `react-hook-form` (`^7.80.0`) + `@hookform/resolvers`.
+  - Framework: **Vinext** (`^1.4.6`) + **Vite** (`groovepack()` de `@3lineas/groovepack/vite`) + React `19.3.1` (`babel-plugin-react-compiler`).
+  - Cloudflare Adapter: `@cloudflare/vite-plugin` con Service Binding `API` -> `api` worker (`wrangler.jsonc`).
+  - Styling & UI: Tailwind CSS v4 (`^4.3.1`), componentes locales en `src/components/ui/` basados en `@base-ui/react`, `@hugeicons/react`, `next-themes`, `@3lineas/groovepack` (`^1.6.0`).
+  - Forms & Validation: `@formisch/react` + `valibot`.
 - **Shared Packages (`packages/`)**:
-  - `@repo/ui`: Shared Shadcn/Radix UI component library (`./components/*`, `./lib/*`, `./hooks/*`, `./styles/*`).
   - `@repo/eslint-config`: Shared ESLint 9 configurations.
   - `@repo/typescript-config`: Shared `tsconfig` bases.
 
@@ -29,17 +28,16 @@ This file provides AI agents with instant architectural orientation for this pro
   - `src/routes/{domain}/{action}.route.ts`
   - `src/dtos/{domain}/{action}.dto.ts`
   - `src/types/{domain}/{name}.type.ts`
-  - `src/errors/{domain}/{name}.error.ts`
+  - `src/errors/{domain}/{name}.error.ts` (factories `createAppError` de `@3lineas/groovepack/errors`)
   - Never create root `src/domains/`, `src/controllers/`, or `src/modules/` folders.
-- **Next.js (`apps/web`) Architecture**:
-  - 100% Server Pages (`page.tsx`), route groups `(app)`, `(auth)`, `(guest)`, and `middleware.ts` for session/route protection.
+- **Vinext (`apps/web`) Architecture**:
+  - 100% Server Pages (`page.tsx`), route groups `(app)`, `(auth)`, `(guest)`, and `src/proxy.ts` for session/route protection.
   - Client components (`'use client'`) restricted to interactive leaf nodes.
-  - GroovePack communication pipeline: `apiToast -> Server Action -> apiAction -> apiClient` using Hono RPC (`hc<AppType>`) over Cloudflare Service Binding (`env.API.fetch`).
+  - GroovePack communication pipeline: `apiToast -> Server Action -> apiAction -> apiClient` (`src/lib/api-client.ts`) using Hono RPC (`createHonoClient<AppType>` con `serviceBinding: "API"`, `fallbackBaseUrl` y `getHeaders`), with `NEXT_PUBLIC_GROOVEPACK_LOCALE=es`.
 
 ## 3. Source Modules & Data Flow
 - `apps/api`: Cloudflare Worker entry at `src/index.ts`. Injects D1 (`ctx.set("db", getD1())`) per request, handles `AppError`, `404` (`notFoundHandler`), and validation errors globally using `@3lineas/groovepack/logger` returning standardized `ActionResponse` JSON with user-safe messages (never exposing internal paths, HTTP methods, `details`, or stack traces), orchestrates multi-step routes with `@3lineas/groovepack/pipeline`, and mounts routes under `/api`.
-- `apps/web`: Next.js App Router deployed to Cloudflare Workers via OpenNext (`wrangler.jsonc`). Communicates with `apps/api` via the `API` Service Binding (`apps/web/src/lib/api-client.ts`) wrapped by `apiAction` (`apps/web/src/actions/api-action.ts`).
-- `packages/ui`: Shared design system components consumed via `@repo/ui/components/*`.
+- `apps/web`: Vinext App Router deployed to Cloudflare Workers (`wrangler.jsonc`). Communicates with `apps/api` via the `API` Service Binding (`apps/web/src/lib/rpc/get-api-client.ts`) wrapped by `apiAction` de `@3lineas/groovepack/action`.
 
 ## 4. Communication & User Copy Language
 - **Configured Language**: Español (`es`).
@@ -49,18 +47,12 @@ This file provides AI agents with instant architectural orientation for this pro
 - **build**: `pnpm build` (`turbo run build`)
 - **typecheck**: `pnpm check-types` (`turbo run check-types`)
 - **lint**: `pnpm lint` (`turbo run lint`)
+- **test**: `pnpm --filter @repo/api test` (`vitest run`)
 - **format**: `pnpm format` (`prettier --write "**/*.{ts,tsx,md}"`)
-- **dev**: `pnpm dev` (`turbo run dev`)
-- **db:generate**: `pnpm db:generate` (`pnpm --filter @repo/api db:generate`)
-- **migrate:local**: `pnpm migrate:local` (`pnpm --filter @repo/api exec -- wrangler d1 migrations apply DB --local`)
-- **migrate:remote**: `pnpm migrate:remote` (`pnpm --filter @repo/api exec -- wrangler d1 migrations apply DB --remote`)
-- **db:studio**: `pnpm db:studio` (`pnpm --filter @repo/api db:studio`)
+- **dev**: `pnpm dev` / `pnpm dev:vinext`
+- **db:migrate**: `pnpm --filter @repo/api db:migrate`
+- **db:migrate:fresh**: `pnpm --filter @repo/api db:migrate:fresh`
+- **db:seed**: `pnpm --filter @repo/api db:seed`
 
-## 6. Known Gaps & Pending Alignment Tasks (Documented During Onboarding)
-1. **Dependencies Not Installed Locally**: `node_modules` is currently absent in the workspace; `pnpm install` must be run when starting implementation tasks before executing `pnpm check-types` or `pnpm build`.
-2. **Full Refactor to GrooveSkills Standards (Valibot & Atomic Layers)**:
-   - Replace `zod` and `@hono/zod-validator` across `apps/api` and `apps/web` with `valibot` (`* as v from 'valibot'`) and `@hono/valibot-validator`.
-   - Deprecate and migrate legacy `apps/api/src/modules/` and `apps/api/src/routers/` into strict `{domain}` subfolders within technical layers (`src/routes/{domain}/`, `src/actions/{domain}/`, `src/dtos/{domain}/`, `src/types/{domain}/`, `src/errors/{domain}/`), enforcing 1 function/type per file and `Pipeline` chaining (1 DB call per Action).
-3. **Testing & Verification Scripts Gap**:
-   - Vitest (`vitest`) is not yet installed or configured; a future task will add Vitest with in-memory SQLite/D1 testing per `testing-vitest`.
-   - `@repo/api` (`apps/api/package.json`) currently lacks `check-types`, `lint`, and `test` scripts.
+## 6. Known Gaps & Pending Alignment Tasks
+- Ninguna brecha crítica pendiente tras la alineación a GrooveSkills `v1.22.0`.

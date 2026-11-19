@@ -6,5 +6,4 @@ export const registerError = createAppError({
   code: "AUTH_REGISTER_FAILED",
   defaultMessage:
     "No pudimos completar tu registro. Por favor, revisa los datos ingresados.",
-  silent: true,
 });

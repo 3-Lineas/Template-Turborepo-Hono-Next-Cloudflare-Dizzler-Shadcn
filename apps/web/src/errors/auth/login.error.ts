@@ -6,5 +6,4 @@ export const loginError = createAppError({
   code: "AUTH_LOGIN_FAILED",
   defaultMessage:
     "No pudimos iniciar tu sesión. Verifica tus datos e inténtalo nuevamente.",
-  silent: true,
 });
